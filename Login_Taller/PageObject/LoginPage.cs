@@ -24,10 +24,10 @@ namespace Login_Taller.PageObject
         public IWebElement password => _driver.FindElement(_txtPassword);
         public IWebElement botonLogin => _driver.FindElement(_btnLogin);
 
-        public void IngresarCredenciales()
+        public void IngresarCredenciales(String user, String pass)
         {
-            username.SendKeys("tomsmith");
-            password.SendKeys("SuperSecretPassword!");
+            username.SendKeys(user);
+            password.SendKeys(pass);
             botonLogin.Click();
         }
 

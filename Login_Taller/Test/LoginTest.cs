@@ -7,15 +7,17 @@ using static System.Net.WebRequestMethods;
 
 namespace Login_Taller.Test
 {
+    [TestFixture]
     public class Tests
     {
-        public IWebDriver driver = new ChromeDriver();
+        public IWebDriver driver;
         public LoginPage login;
         public String baseURL = "https://the-internet.herokuapp.com/login";
 
         [SetUp]
         public void IniciarNavegador()
         {
+            driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl(baseURL);
             login = new LoginPage(driver);
@@ -28,16 +30,10 @@ namespace Login_Taller.Test
             driver.Quit();
         }
 
-        [Test]
-        public void IngresoCorrecto()
+        [TestCase("tomsmith", "SuperSecretPassword!")]
+        public void IngresoCorrecto(String user, String pass)
         {
-            login.IngresarCredenciales();
-
-        }
-        [Test]
-        public void IngresoIncorrecto()
-        {
-            login.IngresarCredenciales();
+            login.IngresarCredenciales(user, pass);
         }
     }
 }
