@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using System.Collections;
 using static System.Net.WebRequestMethods;
 
 namespace Login_Taller.Test
@@ -24,7 +25,6 @@ namespace Login_Taller.Test
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl(baseURL);
             login = new LoginPage(driver);
-            json = new LeerJson();
 
         }
         [TearDown]
@@ -34,12 +34,22 @@ namespace Login_Taller.Test
             driver.Quit();
         }
 
+        public static IEnumerable TestData
+        {
+            get
+            {
+                var json = new LeerJson();
+                return json.login_data().Select(data => new TestCaseData(data.username, data.password));
+            }
+        }
+
         [Test]
-        public void IngresoCorrecto()
+        [TestCaseSource(nameof(TestData))]
+        public void IngresoCorrecto(String user, String pass)
         {
             var data = json.login_data();
-            String user = data.username;
-            String pass = data.password;
+            //String user = data.username;
+            //String pass = data.password;
 
             login.IngresarCredenciales(user, pass);
         }
