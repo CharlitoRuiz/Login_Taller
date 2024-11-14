@@ -14,10 +14,12 @@ namespace Login_Taller.PageObject.Login
         private readonly By _txtUsername = By.Id("username");
         private readonly By _txtPassword = By.Id("password");
         private readonly By _btnLogin = By.CssSelector("#login button");
+        private readonly By _btnLogout = By.CssSelector(".button .icon-signout");
 
         public IWebElement username => _driver.FindElement(_txtUsername);
         public IWebElement password => _driver.FindElement(_txtPassword);
         public IWebElement botonLogin => _driver.FindElement(_btnLogin);
+        public IWebElement botonLogout => _driver.FindElement(_btnLogout);
 
         public void IngresarCredenciales(string user, string pass)
         {
@@ -25,6 +27,14 @@ namespace Login_Taller.PageObject.Login
             password.SendKeys(pass);
             botonLogin.Click();
         }
+
+        public bool ValidarBoton()
+        {
+            bool seMuestra = botonLogout.Displayed;
+            return seMuestra;
+        }
+
+
 
     }
 }

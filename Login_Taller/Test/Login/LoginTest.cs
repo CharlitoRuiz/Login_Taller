@@ -31,6 +31,8 @@ namespace Login_Taller.Test.Test
             //String pass = data.password;
 
             login.IngresarCredenciales(user, pass);
+            // Assertions
+            Assert.That(driver.Url.Equals("https://the-internet.herokuapp.com/secure"));
         }
     }
 }
