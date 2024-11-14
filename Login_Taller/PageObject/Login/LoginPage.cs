@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Login_Taller.PageObject.Login
 {
     public class LoginPage : BasePage
     {
-        public LoginPage(IWebDriver driver) : base(driver) { }
+        public LoginPage(IWebDriver driver, WebDriverWait wait) : base(driver, wait) { }
 
         private readonly By _txtUsername = By.Id("username");
         private readonly By _txtPassword = By.Id("password");
@@ -25,6 +26,10 @@ namespace Login_Taller.PageObject.Login
         {
             username.SendKeys(user);
             password.SendKeys(pass);
+
+        }
+        public void DarClickBotonLogin()
+        {
             botonLogin.Click();
         }
 
