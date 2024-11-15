@@ -12,33 +12,51 @@ namespace Login_Taller.PageObject.Login
     {
         public LoginPage(IWebDriver driver, WebDriverWait wait) : base(driver, wait) { }
 
+        // Elements locators
         private readonly By _txtUsername = By.Id("username");
         private readonly By _txtPassword = By.Id("password");
         private readonly By _btnLogin = By.CssSelector("#login button");
-        private readonly By _btnLogout = By.CssSelector(".button .icon-signout");
+        private readonly By _msgLogged = By.Id("flash");
+        private readonly By _btnLogout = By.CssSelector(".button[href='/logout']");
+        private readonly By _txtTitle = By.CssSelector("h2");
+        private readonly By _msgWelcome = By.CssSelector("h4");
 
-        public IWebElement username => _driver.FindElement(_txtUsername);
-        public IWebElement password => _driver.FindElement(_txtPassword);
-        public IWebElement botonLogin => _driver.FindElement(_btnLogin);
-        public IWebElement botonLogout => _driver.FindElement(_btnLogout);
+        // Actions
+        public IWebElement UsernameField => _driver.FindElement(_txtUsername);
+        public IWebElement PasswordField => _driver.FindElement(_txtPassword);
+        public IWebElement LoginButtom => _driver.FindElement(_btnLogin);
+        public IWebElement LoginMessage => _driver.FindElement(_msgLogged);
+        public IWebElement LogoutButtom => _driver.FindElement(_btnLogout);
+        public IWebElement PageTitle => _driver.FindElement(_txtTitle);
+        public IWebElement PageMessage => _driver.FindElement(_msgWelcome);
 
         public void IngresarCredenciales(string user, string pass)
         {
-            username.SendKeys(user);
-            password.SendKeys(pass);
+            UsernameField.SendKeys(user);
+            PasswordField.SendKeys(pass);
 
         }
         public void DarClickBotonLogin()
         {
-            botonLogin.Click();
+            LoginButtom.Click();
         }
 
         public bool ValidarBoton()
         {
-            bool seMuestra = botonLogout.Displayed;
+            bool seMuestra = LogoutButtom.Displayed;
             return seMuestra;
         }
+        public bool ValidarIngresoCorrecto()
+        {
+            bool isLogged = LoginMessage.Text.Contains("You logged into a secure area!") && PageMessage.Text.Equals("Welcome to the Secure Area. When you are done click logout below.");
+            return isLogged;
+        }
 
+        public void ClickBotonLogout()
+        {
+            LogoutButtom.Click();
+
+        }
 
 
     }

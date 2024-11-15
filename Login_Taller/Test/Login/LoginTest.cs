@@ -1,3 +1,4 @@
+using AventStack.ExtentReports;
 using Login_Taller.Genericos;
 using Login_Taller.PageObject.Login;
 using OpenQA.Selenium;
@@ -26,25 +27,46 @@ namespace Login_Taller.Test.Test
         [TestCaseSource(nameof(TestData))]
         public void IngresoCorrecto(string user, string pass)
         {
+            test = reports.CreateTest("Validando ingreso correcto");
+
             try
             {
                 login.IngresarCredenciales(user, pass);
-                page.ElementoEsVisible(login.botonLogin);
+                test.Log(Status.Pass, $"Se ingresaron las credenciales: {user}, {pass}");
+                // diferentes esperas
+                page.ElementoEsVisible(login.LoginButtom);
+                page.ElementoEsActivo(login.LoginButtom);
+                page.ElementoNoVacio(login.UsernameField);
                 login.DarClickBotonLogin();
+                test.Log(Status.Pass, "Se le dio click el boton login");
+
                 // Assertions
-                Assert.That(driver.Url.Equals("https://the-internet.herokuapp.com/secure"));
+                Assert.That(driver.Url.Equals("https://the-internet.herokuapp.com/secure"), "La URL no corresponde a la pagina de inicio esperada");
+                Assert.That(login.ValidarIngresoCorrecto(), "La validación de ingreso correcto falló.");
+                Assert.That(login.LogoutButtom.Displayed, "El botón de logout no se mostró correctamente.");
+                test.Log(Status.Pass, "Se ingreso correctamente");
+
+                page.ElementoEsActivo(login.LogoutButtom);
+                login.ClickBotonLogout();
+                test.Log(Status.Pass, "Se dio click en el botón Logout");
             }
             catch (NoSuchElementException ex)
             {
-                Console.WriteLine($"No se encontro el elemento: {ex.Message}");
-                captura.CapturarPantalla(driver);
-                Assert.Fail("Cayo en el catch");
+                test.AddScreenCaptureFromBase64String(captura.CapturarPantalla(driver));
+                Assert.Fail($"No se encontró el elemento: {ex.Message}");
+            }
+            catch (AssertionException ex)
+            {
+                test.Log(Status.Fail, $"Fallo de aserción: {ex.Message}");
+                test.AddScreenCaptureFromBase64String(captura.CapturarPantalla(driver));
+                Assert.Fail($"Fallo de aserción: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en la ejecucion:{ex} ");
-                captura.CapturarPantalla(driver);
-                Assert.Fail("Cayo en el catch");
+                test.Log(Status.Fail, $"Error en la ejecución del test: {ex.Message}");
+                test.AddScreenCaptureFromBase64String(captura.CapturarPantalla(driver));
+                Assert.Fail($"Error en la ejecución del test: {ex.Message}");
+                throw;
             }
 
         }
