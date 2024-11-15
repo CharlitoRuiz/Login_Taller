@@ -26,9 +26,6 @@ namespace Login_Taller.Test.Test
         [TestCaseSource(nameof(TestData))]
         public void IngresoCorrecto(string user, string pass)
         {
-            var data = json.login_data();
-            //String user = data.username;
-            //String pass = data.password;
             try
             {
                 login.IngresarCredenciales(user, pass);
@@ -40,11 +37,14 @@ namespace Login_Taller.Test.Test
             catch (NoSuchElementException ex)
             {
                 Console.WriteLine($"No se encontro el elemento: {ex.Message}");
+                captura.CapturarPantalla(driver);
                 Assert.Fail("Cayo en el catch");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en la ejecucion:{ex} ");
+                captura.CapturarPantalla(driver);
+                Assert.Fail("Cayo en el catch");
             }
 
         }
