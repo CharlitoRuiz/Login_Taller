@@ -7,14 +7,6 @@
         {
             "username": "tomsmith2",
             "password": "SuperSecretPassword!00"
-        },
-        {
-            "username": "tomsmith3",
-            "password": "SuperSecretPassword!00"
-        },
-        {
-            "username": "tomsmith4",
-            "password": "SuperSecretPassword!00"
         }
 
     ]
