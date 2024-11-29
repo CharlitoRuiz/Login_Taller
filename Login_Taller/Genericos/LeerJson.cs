@@ -9,16 +9,20 @@ namespace Login_Taller.Genericos
 {
     public class LeerJson
     {
-        public List<POCO.LoginData> login_data()
+        public List<T> ReadJson<T>(String nombreJson, String jsonKey)
         {
+            /// <summary>
+            /// Metodo que lee el json con una estructura generica
+            /// </summary>
+            /// <returns>el archivo json deserializado</returns>
             try
             {
-                var json = JsonConvert.DeserializeObject<Dictionary<String, List<POCO.LoginData>>>(File.ReadAllText(@"..\..\..\Data\login.json"));
-                return json["credenciales"];
+                var json = JsonConvert.DeserializeObject<Dictionary<String, List<T>>>(File.ReadAllText($@"..\..\..\Data\{nombreJson}.json"));
+                return json[jsonKey];
             }
             catch (FileNotFoundException)
             {
-                throw new Exception("No se encontro el archivo json");
+                throw new Exception($"No se encontro el archivo json en la ruta: Data/{nombreJson}");
             }
             catch(JsonException ex)
             {

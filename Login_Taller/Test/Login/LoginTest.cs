@@ -19,7 +19,8 @@ namespace Login_Taller.Test.Test
             get
             {
                 var json = new LeerJson();
-                return json.login_data().Select(data => new TestCaseData(data.username, data.password));
+                var loginData = json.ReadJson<POCO.LoginData>("login", "credenciales");
+                return loginData.Select(data => new TestCaseData(data.username, data.password));
             }
         }
 
@@ -31,24 +32,16 @@ namespace Login_Taller.Test.Test
 
             try
             {
-                login.IngresarCredenciales(user, pass);
-                test.Log(Status.Pass, $"Se ingresaron las credenciales: {user}, {pass}");
-                // diferentes esperas
-                page.ElementoEsVisible(login.LoginButtom);
-                page.ElementoEsActivo(login.LoginButtom);
-                page.ElementoNoVacio(login.UsernameField);
-                login.DarClickBotonLogin();
-                test.Log(Status.Pass, "Se le dio click el boton login");
+                // Paso 1:
+                IngresarCredenciales(user, pass);
 
-                // Assertions
-                Assert.That(driver.Url.Equals("https://the-internet.herokuapp.com/secure"), "La URL no corresponde a la pagina de inicio esperada");
-                Assert.That(login.ValidarIngresoCorrecto(), "La validación de ingreso correcto falló.");
-                Assert.That(login.LogoutButtom.Displayed, "El botón de logout no se mostró correctamente.");
-                test.Log(Status.Pass, "Se ingreso correctamente");
+                // Paso 2:
+                validarIngreso();
 
-                page.ElementoEsActivo(login.LogoutButtom);
-                login.ClickBotonLogout();
-                test.Log(Status.Pass, "Se dio click en el botón Logout");
+                // Paso 3:
+                RealizarLogout();
+
+
             }
             catch (NoSuchElementException ex)
             {
@@ -69,6 +62,32 @@ namespace Login_Taller.Test.Test
                 throw;
             }
 
+        }
+        private void IngresarCredenciales(String user, String pass)
+        {
+            login.IngresarCredenciales(user, pass);
+            test.Log(Status.Pass, $"Se ingresaron las credenciales: {user}, {pass}");
+            // diferentes esperas
+            page.ElementoEsVisible(login.LoginButtom);
+            page.ElementoEsActivo(login.LoginButtom);
+            page.ElementoNoVacio(login.UsernameField);
+            login.DarClickBotonLogin();
+            test.Log(Status.Pass, "Se le dio click el boton login");
+        }
+
+        private void validarIngreso()
+        {
+            // Assertions
+            Assert.That(driver.Url.Equals("https://the-internet.herokuapp.com/secure"), "La URL no corresponde a la pagina de inicio esperada");
+            Assert.That(login.ValidarIngresoCorrecto(), "La validación de ingreso correcto falló.");
+            Assert.That(login.LogoutButtom.Displayed, "El botón de logout no se mostró correctamente.");
+            test.Log(Status.Pass, "Se ingreso correctamente");
+        }
+        private void RealizarLogout()
+        {
+            page.ElementoEsActivo(login.LogoutButtom);
+            login.ClickBotonLogout();
+            test.Log(Status.Pass, "Se dio click en el botón Logout");
         }
     }
 }
