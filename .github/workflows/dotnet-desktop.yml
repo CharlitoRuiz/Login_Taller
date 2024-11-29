@@ -35,7 +35,9 @@ jobs:
       
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test
+      id: test
+      run: |
+        dotnet test
       continue-on-error: true
 
     # Subir los artefactos
@@ -43,4 +45,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ExtentReport
-        path: "D:/a/Login_Taller/Login_Taller/Login_Taller/Reportes"  
+        path: "D:/a/Login_Taller/Login_Taller/Login_Taller/Reportes" 
+
+    - name: Fail the build if tests failed
+      if: steps.test.outcome == 'failure'  # Verificamos si el paso de pruebas falló
+      run: |
+        echo "Tests failed. Marking build as failed."
+        exit 1
