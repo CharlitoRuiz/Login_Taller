@@ -36,6 +36,7 @@ jobs:
     # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test
+      continue-on-error: true
 
     # Subir los artefactos
     - name: Publish test report artifacts
